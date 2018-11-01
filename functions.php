@@ -303,3 +303,74 @@ if( function_exists('acf_add_local_field_group') ) {
 
 
 }
+
+
+add_filter( 'widget_text', 'do_shortcode' );
+
+function films_list_func( $atts ) {
+
+	$a = shortcode_atts( array(
+		'num_films' => 5
+	), $atts );
+
+		
+	// WP_Query arguments
+	$film_args = array (
+		'post_type'              => array( 'film' ),
+		'post_status'            => array( 'publish' ),
+		'nopaging'               => true
+	);
+
+	// The Query
+	$film_query = new WP_Query( $film_args );
+
+
+	ob_start();
+	
+	?>
+		
+		
+		<div class="container">
+			
+			<div class="row">
+			
+				<?php if($film_query->have_posts()): ?>
+					
+					<ul class="films_list">
+						
+						<?php while($film_query->have_posts()): $film_query->the_post(); ?>
+
+
+							<li class="film">
+									
+								<a href="<?php the_permalink(); ?>"><?php echo the_title(); ?></a>	
+																	
+							</li>
+							
+
+						<?php endwhile; ?>	
+						<?php wp_reset_postdata(); ?>
+						
+					</div>
+
+				<?php else: ?>
+
+					<h2>No Films Found!</h2>
+
+				<?php endif; ?>
+
+			</div>
+
+		</div>
+
+
+
+	<?php
+
+	$contents = ob_get_clean();	
+
+	return $contents;
+
+}
+add_shortcode( 'films_list', 'films_list_func' );
+
