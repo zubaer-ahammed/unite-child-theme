@@ -313,12 +313,13 @@ function films_list_func( $atts ) {
 		'num_films' => 5
 	), $atts );
 
+	extract($a);
 		
 	// WP_Query arguments
 	$film_args = array (
 		'post_type'              => array( 'film' ),
 		'post_status'            => array( 'publish' ),
-		'nopaging'               => true
+		'posts_per_page'	     => $num_films	
 	);
 
 	// The Query
