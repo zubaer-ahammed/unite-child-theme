@@ -376,3 +376,78 @@ add_shortcode( 'films_list', 'films_list_func' );
 
 /* Flush rewrite rules for custom post types. */
 add_action( 'after_switch_theme', 'flush_rewrite_rules' );
+
+
+add_filter('the_content', 'add_film_info') ; 
+
+function add_film_info ($content) {
+
+	$countries = wp_get_post_terms(get_the_ID(), 'film_country', array("fields" => "all"));
+	$genres = wp_get_post_terms(get_the_ID(), 'film_genre', array("fields" => "all"));
+	$country_list = [];
+	$genre_list = [];
+
+	if(!empty($countries)) {
+		foreach ( $countries as $country ) {
+			 $country_list[] = esc_html( $country->name );
+		}
+
+		$country_list = implode( ', ', $country_list );
+	}
+
+	if(!empty($genres)) {
+		foreach ( $genres as $genre ) {
+			 $genre_list[] = esc_html( $genre->name );
+		}
+
+		$genre_list = implode( ', ', $genre_list );
+	}
+
+
+	$film_informations = get_field('film_informations'); 
+
+	if(!empty($film_informations)) {
+
+		$ticket_price = $film_informations['ticket_price'];
+		$release_date = $film_informations['release_date'];
+
+	}
+
+	ob_start();
+
+	?>
+		
+
+	<div class="container">
+		<div class="row">
+				
+			<div class="film_informations-wrapper">
+				<div class="film_informations-inner">
+					<ul class="film_informations">
+						
+						<?php if(!empty($country_list)): ?>
+							<li><h4>Country: <?php echo $country_list; ?></h4></li>
+						<?php endif ?>
+						<?php if(!empty($genre_list)): ?>
+							<li><h4>Genre: <?php echo $genre_list; ?></h4></li>
+						<?php endif ?>
+						<?php if(!empty($ticket_price)): ?>
+							<li><h4>Ticket Price: <?php echo $ticket_price; ?></h4></li>
+						<?php endif ?>
+						<?php if(!empty($release_date)): ?>
+							<li><h4>Release Date: <?php echo $release_date; ?></h4></li>
+						<?php endif ?>
+
+					</ul>
+				</div>
+			</div>	
+
+		</div>
+	</div>
+
+	<?php
+	$film_info = ob_get_clean();
+
+	return $content.$film_info ;
+
+}
