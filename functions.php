@@ -374,3 +374,5 @@ function films_list_func( $atts ) {
 }
 add_shortcode( 'films_list', 'films_list_func' );
 
+/* Flush rewrite rules for custom post types. */
+add_action( 'after_switch_theme', 'flush_rewrite_rules' );
