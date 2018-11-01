@@ -182,3 +182,124 @@ function create_film_taxonomies() {
 
 
 }
+
+
+// 1. customize ACF path
+add_filter('acf/settings/path', 'my_acf_settings_path');
+ 
+function my_acf_settings_path( $path ) {
+ 
+    // update path
+    $path = get_stylesheet_directory() . '/lib/acf/';
+    
+    // return
+    return $path;
+    
+}
+ 
+
+// 2. customize ACF dir
+add_filter('acf/settings/dir', 'my_acf_settings_dir');
+ 
+function my_acf_settings_dir( $dir ) {
+ 
+    // update path
+    $dir = get_stylesheet_directory_uri() . '/lib/acf/';
+    
+    // return
+    return $dir;
+    
+}
+ 
+
+// 3. Hide ACF field group menu item
+add_filter('acf/settings/show_admin', '__return_false');
+
+
+// 4. Include ACF
+include_once( get_stylesheet_directory() . '/lib/acf/acf.php' );
+
+
+if( function_exists('acf_add_local_field_group') ) {
+
+	acf_add_local_field_group(array(
+		'key' => 'group_5bdb4a0765736',
+		'title' => 'Film Options',
+		'fields' => array(
+			array(
+				'key' => 'field_5bdb4a1fbf3f8',
+				'label' => 'Film Informations',
+				'name' => 'film_informations',
+				'type' => 'group',
+				'instructions' => '',
+				'required' => 1,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'layout' => 'block',
+				'sub_fields' => array(
+					array(
+						'key' => 'field_5bdb4a34bf3f9',
+						'label' => 'Ticket Price',
+						'name' => 'ticket_price',
+						'type' => 'number',
+						'instructions' => 'Ticket price in your currency.',
+						'required' => 1,
+						'conditional_logic' => 0,
+						'wrapper' => array(
+							'width' => '',
+							'class' => '',
+							'id' => '',
+						),
+						'default_value' => '',
+						'placeholder' => '',
+						'prepend' => '',
+						'append' => '',
+						'min' => '',
+						'max' => '',
+						'step' => '',
+					),
+					array(
+						'key' => 'field_5bdb4a71bf3fa',
+						'label' => 'Release Date',
+						'name' => 'release_date',
+						'type' => 'date_picker',
+						'instructions' => '',
+						'required' => 1,
+						'conditional_logic' => 0,
+						'wrapper' => array(
+							'width' => '',
+							'class' => '',
+							'id' => '',
+						),
+						'display_format' => 'd/m/Y',
+						'return_format' => 'd/m/Y',
+						'first_day' => 1,
+					),
+				),
+			),
+		),
+		'location' => array(
+			array(
+				array(
+					'param' => 'post_type',
+					'operator' => '==',
+					'value' => 'film',
+				),
+			),
+		),
+		'menu_order' => 0,
+		'position' => 'normal',
+		'style' => 'default',
+		'label_placement' => 'top',
+		'instruction_placement' => 'label',
+		'hide_on_screen' => '',
+		'active' => 1,
+		'description' => '',
+	));
+
+
+}
